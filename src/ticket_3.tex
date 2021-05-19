@@ -1,0 +1,23 @@
+\section{Формализм. Часы с прямой зависимостью (свойства и алгоритм)}
+
+\begin{definition}
+    \[
+        e \to_d f \Llra e < f \vee \exists m \in \bM \colon~ e \leqslant \textt{snd(m)}
+        \wedge \texttt{rcv(m)} \leqslant f
+    .\]
+\end{definition}
+
+\begin{definition}
+    \textit{Часы с прямой зависимостью}. Определим функцию $VC_d \colon \bE \to N^k$
+    так, чтобы
+    \[
+        \forall e, f \in \bE\colon~ e \to_d f \Llra VC_d(e) < VC_d(f)
+    .\]
+\end{definition}
+
+\begin{algorithm}(Часы с прямой зависимостью)
+
+    Алгоритм полностью повторяет алгоритм для векторных часов, за исключением
+    того, что посылается только та компонента времени, которая соотвествует
+    процессу-отправителю.
+\end{algorithm}

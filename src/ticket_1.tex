@@ -1,0 +1,50 @@
+\section{Формализм. Логические часы Лампорта (свойства и алгоритм)}
+
+Кратко опишем используемые далее обозначения.
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        Обозначение & Объект \\ \hline
+        $P, Q, R, \ldots \in \bP$ & Процессы \\ \hline
+        $a, b, c, \ldots \in \bE$ & События в процессах $\texttt{proc(e)} \in \bP$
+        \\ \hline
+        $m \in \bM$ & Сообщения, $\texttt{snd(m), rcv(m)} \in \bE$. \\ \hline
+    \end{tabular}
+    \caption{Общие обозначения}
+\end{table}
+
+\begin{definition}
+    Отношение \textit{Произошло-до ($\rightarrow$)} -- минимальный
+    строгий частичный порядок на $\bE \times \bE$ такой, что
+    \begin{itemize}
+        \item $e \rightarrow f$, если $e, f$ в одном процессе и $e$ идет перед $f$.
+        \item Если $m$ -- сообщение, то $\texttt{snd(m)} \rightarrow \texttt{rcv(m)}$.
+    \end{itemize}
+\end{definition}
+
+\begin{definition}
+    \textit{Логические часы}. Определим функцию $C \colon \bE \to N$ так, чтобы
+\[
+    \forall e, f \in \bE~ e \rightarrow f \Lra C(e) < C(f)
+.\]
+\end{definition}
+
+\begin{algorithm}(Логические часы Лампорта)
+    \begin{itemize}
+        \item Каждый процесс хранит счетчик.
+        \item Перед посылкой процесс увеличивает счетчик на единицу.
+        \item При посылке дополнительно посылается счетчик.
+        \item Получатель обновляет свое время следующим образом:
+            \[
+                C \leftarrow \max(C, C_r) + 1
+            .\]
+    \end{itemize}
+\end{algorithm}
+
+Свойства логических часов Лампорта: 
+\begin{itemize}
+    \item Время события не уникально.
+    \item Являются логическими часами в смысле определения.
+\end{itemize}
+

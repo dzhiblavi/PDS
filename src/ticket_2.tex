@@ -1,0 +1,39 @@
+\section{Формализм. Векторные часы (свойства и алгоритм)}
+
+\begin{definition}
+    \textit{Векторные часы}. Определим функцию $VC \colon \bE \to N^k$
+    так, чтобы
+    \[
+        \forall e, f \in \bE~ e \to f \Llra VC(e) < VC(f)
+    .\]
+    Сравнение производится покомпонентно.
+\end{definition}
+
+\begin{algorithm}(Векторное время)
+    \begin{itemize}
+        \item Каждый процесс хранит свой вектор-время (размер -- число процессов).
+        \item Перед посылкой сообщения процесс увеличивает свою компоненту на единицу.
+        \item При приеме сообщение берется покомпонентный максимум:
+            \[
+                VC \leftarrow \max(VC, VC_r)
+            .\]
+    \end{itemize}
+\end{algorithm} 
+
+Свойства векторного времени:
+\begin{itemize}
+    \item Векторное время уникально для каждого события.
+    \item Векторное время полностью передает отношение произошло-до.
+    \item 
+        \[
+            \forall e, f \in \bE\colon~ \texttt{proc(e)} = P_i,~
+            \texttt{proc(f)} = P_j \Lra
+            \left(e \to f \Llra \begin{pmatrix}
+                VC(e)_i \\
+                VC(e)_j
+            \end{pmatrix} < \begin{pmatrix}
+                VC(f)_i \\ 
+                VC(f)_j
+            \end{pmatrix}\right)
+        .\]
+\end{itemize}
