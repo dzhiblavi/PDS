@@ -4,20 +4,21 @@
 
 \begin{definition} \textit{Состояние узла в системе:}
     \begin{itemize}
-        \item $dist$ -- расстояние до корня
-        \item $parent$ -- предок в дереве
+        \item $\texttt{dist}$ -- расстояние до корня.
+        \item $\texttt{parent}$ -- предок в дереве.
     \end{itemize}
 \end{definition}
 
 \begin{algorithm}
     \enewline
     \begin{itemize}
-        \item Для корня фиксированно: $dist \coloneqq 0,~ parent \coloneqq -1$
-        \item Для остальных:
+        \item Для корня фиксированно: $\texttt{dist} \coloneqq 0,~ 
+            \texttt{parent} \coloneqq -1$.
+        \item Остальные процессы периодически совершают следующее:
             \begin{itemize}
-                \item Найти соседа с минимальным $dist_j$
-                \item $dist \coloneqq dist_j + 1$
-                \item $parent \coloneqq j$
+                \item Найти соседа с минимальным $\texttt{dist}_j$.
+                \item $\texttt{dist} \coloneqq \texttt{dist}_j + 1$.
+                \item $\texttt{parent} \coloneqq j$.
             \end{itemize}
     \end{itemize}
 \end{algorithm}
@@ -25,3 +26,4 @@
 \begin{exercise}
     Доказательство корректности.
 \end{exercise}
+
