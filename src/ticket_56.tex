@@ -1,0 +1,27 @@
+\section{Самостабилизация: поиск остовного дерева}
+
+\textit{Про самостабилизацию в предыдущем билете.}
+
+\begin{definition} \textit{Состояние узла в системе:}
+    \begin{itemize}
+        \item $dist$ -- расстояние до корня
+        \item $parent$ -- предок в дереве
+    \end{itemize}
+\end{definition}
+
+\begin{algorithm}
+    \enewline
+    \begin{itemize}
+        \item Для корня фиксированно: $dist \coloneqq 0,~ parent \coloneqq -1$
+        \item Для остальных:
+            \begin{itemize}
+                \item Найти соседа с минимальным $dist_j$
+                \item $dist \coloneqq dist_j + 1$
+                \item $parent \coloneqq j$
+            \end{itemize}
+    \end{itemize}
+\end{algorithm}
+
+\begin{exercise}
+    Доказательство корректности.
+\end{exercise}
