@@ -1,0 +1,33 @@
+\section{Транзакции в распределённых системах. ACID. 2 Phase Commit.}
+
+\textit{Про транзакции написано в предыдущем билете.}
+
+\begin{definition} \textit{2 Phase Commit:}
+    \begin{itemize}
+        \item Централизованный алгоритм завершения транзакции, т.е.
+            у каждой транзакции есть выделенный \textit{transaction coordinator}.
+        \item \textbf{Фаза 1.} Запрос (request):
+            \begin{itemize}
+                \item Координатор спрашивает каждого участника о готовности к завершения транзакции.
+                \item Участник может ответить \textit{yes} только, если он может обеспечить
+                    завершение даже в случае сбоя (т.е. он всё записал) и все данные корректны, иначе \textit{no}.
+                \item Транзакцию можно завершить только, если все участники ответили \textit{yes}.
+            \end{itemize}
+        \item \textbf{Фаза 2.} Завершение:
+            \begin{itemize}
+                \item Координатор принимает решение commit/abort и записывает его.
+                \item Координатор доводит до участников решение.
+            \end{itemize}
+    \end{itemize}
+\end{definition}
+
+\begin{remark} \textit{Ошибки:}
+    \begin{itemize}
+        \item Transaction Commit == Consensus, поэтому к нему применим результат \textit{FLP}.
+        \item При отказе узлов или связи \textit{2PC} не сможет завершиться, до восстановления узлов/связи.
+    \end{itemize}
+\end{remark}
+
+\begin{remark}
+    Много полезных картинок в конце презентации к лекции 7.
+\end{remark}
