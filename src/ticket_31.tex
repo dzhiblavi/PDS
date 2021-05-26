@@ -1,0 +1,169 @@
+\section{Шардирование. Общий принцип, JumpHash.}
+
+\textit{Первую часть вопроса см. в предыдущем билете.}
+
+\begin{algorithm}(JumpHash)
+    
+    Пусть в системе $N$ узлов.
+    \begin{itemize}
+        \item Обозначим за
+            \[
+                0 \leqslant ch(k, N) < N
+            \]
+            номер узла, на который должен попасть ключ $k$.
+        \item При добавлении узла каждый ключ с вероятностью $(N + 1)^{-1}$
+            переходит на новый узел.
+        \item Все это происходит при предположении, что узлы только добавляются.
+            Это разумно в системе, где число данных в основном растет. При отказе
+            узла его место (номер) получает новый работающий узел.
+    \end{itemize}
+\end{algorithm}
+
+\begin{lemma}(О равномерности распределения узлов)
+
+    Пусть $\xi_N = ch(k, N)$ -- случайная величина, номер узла, на котором
+    лежит ключ $k$. Тогда $P(\xi_N = i) = \frac{1}{N}$.
+\end{lemma}
+\begin{proof}
+    \enewline
+    \begin{itemize}
+        \item База индукции. Очевидно, что $P(\xi_1 = 0) = 1$.
+        \item Переход. Если $i = N$:
+            \[
+                P(\xi_{N + 1} = N) = \sum_{i = 0}^{N - 1}{P(\xi_N = i) \cdot 
+                \frac{1}{N + 1}} = \sum_{i = 0}^{N - 1}{\frac{1}{N} \cdot 
+                \frac{1}{N + 1}} = \frac{1}{N + 1}
+            .\]
+            Если $i \neq N$:
+            \[
+                P(\xi_{N + 1} = i) = P(\xi_N = i) \cdot \left(1 - \frac{1}{N + 1}\right)
+                = \frac{1}{N} \cdot \frac{N}{N + 1} = \frac{1}{N + 1}
+            .\]
+    \end{itemize}
+\end{proof}
+
+\lstset{
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\begin{algorithm}(Наивная реализация)
+    Напишем простую реализацию алгоритма, которая для заданного узла
+    $k$ эмулирует его жизнь при количестве серверов от $1$ до $n$:
+    \begin{lstlisting}
+        fun jumpHash(key: Key, n: Int) -> Int {
+            random.set_seed(hash(key))
+            result = 0
+            for (i in 1 until n)
+                if (random.uniform(0, 1) < 1/(i + 1))
+                    result = i
+            return result
+        }
+    \end{lstlisting}
+\end{algorithm}
+
+\begin{algorithm}(Хорошая реализация)
+    
+    Заметим, что ``прыжки'' происходят редко, то есть достаточно часто
+    \[
+        ch(k, j + 1) = ch(k, j)
+    .\]
+    Будем вычислять только точки прыжков, то есть точки, в которых
+    \[
+        ch(k, j + 1) = j
+    .\]
+    Предположим, что мы знаем точку последнего прыжка $b$:
+    \[
+        ch(k, b + 1) = b
+    .\]
+    Тогда поставим задачу найти ближайшую справа точку, в которой произойдет
+    прыжок:
+    \[
+        ch(k, j + 1) \neq ch(k, b + 1),~ j \to \min_{j > b}
+    .\]
+    Эквивалентная этой задача ставится так: найти максимальное $j$, в котором
+    еще не произошел прыжок:
+    \[
+        ch(k, j + 1) = ch(k, b + 1),~ j \to \max_{j > b}
+    .\]
+\end{algorithm}
+
+\begin{lemma}
+    $P(ch(k, n) = ch(k, m)) = \frac{m}{n}$, если $n \geqslant m$.
+\end{lemma}
+\begin{proof}
+    \enewline
+    \begin{itemize}
+        \item Если $n = m$, то
+            \[
+                P(ch(k, n) = ch(k, n)) = 1 = \frac{n}{n} = \frac{m}{n}
+            .\]
+        \item Если $n > m$. Тогда прыжков не должно быть на шагах от
+            $m + 1$ до $n$. Вероятность того, что на $m + k$-м шаге не произойдет
+            прыжок, равна $1 - \frac{1}{m + k} = \frac{m + k - 1}{m + k}$.
+            Получаем вероятность:
+            \[
+                P(ch(k, n) = ch(k, m)) = \frac{m}{m + 1} \cdot \frac{m + 1}{m + 2}
+                \cdot \ldots \cdot \frac{n - 1}{n} = \frac{m}{n}
+            .\]
+    \end{itemize}
+\end{proof}
+
+\begin{algorithm}(Хороший алгоритм, продолжение)
+    
+    Пусть в точке $i \geqslant b + 1$ еще не произошел прыжок. Тогда понятно,
+    что $j \geqslant i$:
+    \[
+        P(j \geqslant i) = P(ch(k, i) = ch(k, b + 1)) = \frac{b + 1}{i}
+    .\]
+    Воспользуемся этим равенством, чтобы сделать более эффективный алгоритм.
+    Сгенерируем случайное число $r ~ U(0, 1)$. Тогда
+    \[
+        j \geqslant i \Llra r \leqslant \frac{b + 1}{i}
+    ,\]
+    что эквивалентно
+    \[
+        j \geqslant i \Llra i \leqslant \frac{b + 1}{r}
+    .\]
+    Выберем самую точную нижнюю границу на $j$:
+    \[
+        j = \max_{i \leqslant \frac{b + 1}{r}}{i} = \left\lfloor \frac{b + 1}{r} 
+            \right\rfloor
+    .\]
+    Это и будет очередная точка прыжка. Напишем код, который симулирует жизнь
+    ключа:
+    \begin{lstlisting}
+        fun jumpHash(key: Key, n: Int) -> Int {
+            random.set_seed(hash(key))
+            b = -1 // Last jump point
+            j = 0 // Next jump point
+            while (j < n) {
+                b = j
+                r = random.uniform(0, 1)
+                j = floor((b + 1) / r)
+            }
+        }
+    \end{lstlisting}
+\end{algorithm}
+
+\begin{lemma}(О времени работы JumpHash)
+
+    Математическое ожидание времени работы JumpHash составляет $\cO(\log{N})$.
+\end{lemma}
+\begin{proof}
+    Мы совершаем прыжки только вперед, причем каждый узел посещаяется не более
+    одного раза.
+    \[
+        \bE[T(N)] = \sum_{i = 1}^{N - 1}{\bE[\xi_i]} = \sum_{i = 1}^{N - 1}{i^{-1}}
+        = \cO(\log{N})
+    .\]
+\end{proof}
+
+\begin{remark}
+    \enewline
+    \begin{itemize}
+        \item JumpHash использует $\cO(1)$ памяти.
+        \item JumpHash очень хорошо распределяет нагрузку.
+    \end{itemize}
+\end{remark}
