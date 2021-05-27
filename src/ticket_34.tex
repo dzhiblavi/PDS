@@ -1,0 +1,128 @@
+\section{Raft. Aлгоритм, его свойства.}
+
+\begin{remark}
+    \textit{Paxos} обладает недостатками,
+    его трудно реализовать на практике:
+    \begin{itemize}
+        \item Очень сложен в понимании.
+        \item Построен на ``однократном консенсусе''
+        \item Проблемы с практической реализацией:
+            \begin{itemize}
+                \item Нужен multi-Paxos.
+                \item Нужен выбор лидера.
+                \item Нужен общий журнал.
+            \end{itemize}
+    \end{itemize}
+\end{remark}
+
+\begin{definition} \textit{Дизайн Raft}:
+    \begin{itemize}
+        \item \textit{Понятность} (минимум состояний и недетерминизма).
+        \item Подзадачи:
+            \begin{itemize}
+                \item \textit{Leader election}.
+                \item \textit{Log replication}.
+                \item \textit{Safety}.
+            \end{itemize}
+        \item Гарантии:
+            \begin{itemize}
+                \item \textit{Election Safety} (не более одного лидера).
+                \item \textit{Leader Append-Only} (лидер только добавляет).
+                \item \textit{Log Matching} (все записи в журналах совпадают).
+                \item \textit{Leader Completes} (committed записи будут у будущих лидеров).
+                \item \textit{State Machine Safety} (однозначный выбор операции).
+            \end{itemize}
+    \end{itemize}
+\end{definition}
+
+\begin{algorithm} \textit{Выбор лидера:}
+    \begin{itemize}
+        \item Весь процесс работы Raft разбит на термы, в начале каждого терма
+            происходит выбор лидера. Термы нумеруются последовательными числами.
+            Каждый узел помнит максимальный номер. В каждом терме не более
+            одного лидера.
+        \item \textbf{Состояния} узлов:
+            \begin{itemize}
+                \item \textit{Leader} --- обрабатывает все запросы.
+                \item \textit{Follower} --- все узлы, кроме лидера.
+                \item \textit{Candidate} --- узлы претендующие на лидерство
+                    (роль существует только на этапе выборов).
+            \end{itemize}
+        \newpage
+        \item \textbf{Переходы} состояний:
+            \begin{itemize}
+                \item Все \textit{followers} следят за \textit{heartbeats}
+                    (регулярные сообщения) от лидера. Если лидер не сообщает
+                    о себе определённое время, то узел инициирует новые выборы.
+                    Для того, чтобы все узлы одновременно не ломились на выборы
+                    используют технику рандомизированных таймаутов.
+                \item \textit{Candidate} занимается одой из следующих вещей:
+                    \begin{itemize}
+                        \item Ожидает большинство голосов за себя.
+                        \item Участвует в выборе другого кандидата.
+                        \item Ожидает таймаут.
+                    \end{itemize}
+                \item \textit{Leader} работает, пока жив его терм, т.е. до тех пор
+                    пока он не обнаружит терм с большим номером в системе.
+            \end{itemize}
+    \end{itemize}
+\end{algorithm}
+
+\begin{definition}
+    \textit{Журнал} представляет из себя последовательность пронумерованных
+    ячеек (log index), которые хранят номер терма и операцию.
+\end{definition}
+
+\begin{algorithm} \textit{Репликация журнала:}
+    \begin{itemize}
+        \item \textit{Committed} --- записи, которые подтверждены большинством.
+        \item \textit{Leader} регулярно рассылает всем \textit{AppendEntries}:
+            \begin{itemize}
+                \item \textit{leader id} и пачка записей (\textit{log index, term, data}).
+                \item Информация (\textit{log index, term}) предыдущей записи.
+                \item \textit{Follower} добавляет запись в журнал только в случае,
+                    когда информация о предыдущей записи совпадает.
+            \end{itemize}
+    \end{itemize}
+\end{algorithm}
+
+\begin{remark}
+    Возможны следующие расхождения в журналах у \textit{followers}:
+    \begin{itemize}
+        \item Отсутствие каких-то записей (не успели получить обновления).
+        \item Неподтверждённые записи (например, какой-то умерший лидер,
+            который не успел зафиксировать записи большинством).
+        \item Оба вида расхождения вместе (корректный префикс записей и странный набор в хвосте).
+    \end{itemize}
+\end{remark}
+
+\begin{algorithm} \textit{Согласование журналов}:
+    \begin{itemize}
+        \item Храним для каждого \textit{follower} next index, т.е. номер
+            записи с которой нужно слать обновления.
+        \item Если при получение новой записи, информация о предыдущей не совпадает,
+            то \textit{follower} должен выкинуть некорректную запись, уменьшить индекс и
+            повторить операцию заново, пока не останется корректный префикс. Затем получить
+            хвост. (Можно оптимизировать, но смысла нет из-за редкости ошибок).
+    \end{itemize}
+\end{algorithm}
+
+\newpage
+\begin{definition} \textit{Safety механизм}:
+    \begin{itemize}
+        \item \textit{Committed} записи в журнале не должны перезаписываться.
+        \item \textit{Election restriction} --- не отдаём голос лидеру,
+            если наш журнал более \textit{свежий}. Для проверки сначала сравниваем
+            term последней записи, в случае равенства смотрим на index.
+    \end{itemize}
+\end{definition}
+
+\begin{remark}
+    Только записи из текущего \textit{term leader} считаются
+    \textit{committed} при записи в большинство узлов. (Пример проблемы подробно
+    рассказан на 8 лекции).
+\end{remark}
+
+\begin{proposition}
+    \textit{Raft} гарантирует \textit{safety}.
+\end{proposition}
