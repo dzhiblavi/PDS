@@ -1,0 +1,46 @@
+\section{СAP теорема (концепции, подходы, без доказательства).}
+
+\begin{definition}
+    Распределённой системе хранения необходимо
+    три свойства \textbf{CAP}:
+
+    \begin{itemize}
+        \item \textit{Consistency} --- все клиенты видят одинаковые данные
+            (atomic/strong consistency).
+        \item \textit{Availability} --- система работает несмотря на сбои узлов
+            (запрос к неотказавшему узлу должен получить ответ).
+        \item \textit{Partition tolerance} --- система работает несмотря на обрыв
+            связи между разными частями системы (partition).
+    \end{itemize}
+\end{definition}
+
+\begin{theorem}
+    Можно иметь только два из трёх свойств \textbf{CAP}.
+\end{theorem}
+
+\begin{definition}
+    \textit{Gossip protocol} --- принцип построения системы, при котором
+    узлы распространяют информацию друг другу по мере возможности.
+    В том числе то, что они узнали от других узлов --- слухи.
+\end{definition}
+
+\begin{remark}
+    \textit{Gossip protocols} могут обеспечить только \textit{eventual consistency}.
+    Это означает, что при отсутствии сбоев через какое-то время все узлы системы
+    будут знать согласованное состояние системы.
+\end{remark}
+
+\begin{examples} \textit{Варианты систем}:
+    \begin{itemize}
+        \item \textbf{CA}: тривиальные системы, например, с координатором.
+        \item \textbf{CP}: Paxos, Raft и другие.
+        \item \textbf{AP}: Gossip protocols.
+        \item В некоторых случаях системы принято делить на два вида:
+            \begin{itemize}
+                \item $ACID = \textbf{CA}$ --- Atomicity, Consistency,
+                    Isolation, Durability.
+                \item $BASE = \textbf{AP}$ --- Basically Available, Soft state,
+                    Eventual consistency.
+            \end{itemize}
+    \end{itemize}
+\end{examples}
