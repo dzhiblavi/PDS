@@ -1,0 +1,50 @@
+\section{MapReduce. Последовательная реализация, примеры решаемых задач.}
+
+\begin{definition}
+    \textit{Модель MapReduce}. Универсальная модель для распределенных
+    вычислений. Решает задачи, которые можно представить через следующие операции:
+    \begin{itemize}
+      \item \texttt{map :: Document -> [(Key, Value)]}, обработка каждого
+        документа независимо.
+      \item \texttt{group :: [[(Key, Value)]] -> [(Key, Value)]},
+        результаты \texttt{map} объединяются по ключу.
+      \item \texttt{reduce :: [Value] -> Result}, свертка сгруппированных
+        значений.
+    \end{itemize}
+\end{definition}
+
+\begin{algorithm}
+  Последовательная реализация.
+  \begin{lstlisting}
+fun mapReduce(docs: [Document],
+              mapper: Document -> [(Key, Value)],
+              reducer: [Value] -> Result): {Key: Result}
+    kvs = {}
+    for doc in docs:
+        for key, value in mapper(doc):
+            if key not in kvs:
+                kvs[key] = []
+            kvs[key].append(value)
+    return kvs.map { key, values -> key, reducer(values) }
+  \end{lstlisting}
+\end{algorithm}
+
+\begin{example}
+  Распределенный подсчет встречаемости слов.
+  \begin{itemize}
+    \item Каждый документ разбивается на слова.
+    \item \texttt{map} для каждого слова возвращает пару из этого слова и $1$.
+    \item \texttt{reduce} суммирует значения.
+  \end{itemize}
+\end{example}
+
+\begin{example}
+  Распределенный подсчет обратного индекса слов по документам.
+  \begin{itemize}
+    \item Каждый документ разбивается на слова.
+    \item \texttt{map} для каждого слова возвращает пару из этого слова и
+      идентификатора документа.
+    \item \texttt{reduce} создает по списку идентификаторов множество
+      уникальных.
+  \end{itemize}
+\end{example}
