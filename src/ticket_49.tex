@@ -58,3 +58,15 @@ fun reducer(values: [(Float, Int)]): Float:
     return sum(values[0]) / sum(values[1])
   \end{lstlisting}
 \end{example}
+
+\begin{definition}
+  \textit{Map-only задачи}. Задачи MapReduce, в которых не требуется свертка.
+\end{definition}
+
+\begin{example}(Поиск по большой коллекции документов)
+  \begin{itemize}
+    \item Выполним поиск по каждому документу независимо, весь результат
+      сопоставим одному фиктивному ключу.
+    \item Объединим результаты с каждого маппера, минуя обработку редьюсерами.
+  \end{itemize}
+\end{example}
