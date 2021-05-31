@@ -1,0 +1,60 @@
+\section{MapReduce. Каскады MapReduce задач, Combiner-оптимизация, Map-only
+  задачи.}
+
+Некоторые задачи нельзя решить за одно исполнение MapReduce.
+
+\lstset{
+    language=Python,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\begin{example}(Для каждого интервала $[1000k, 1000(k + 1))$ найти число слов с
+  числом вхождений, лежащим в данном интервале.)
+  \begin{itemize}
+    \item С помощью MapReduce посчитать количество вхождений для каждого слова.
+    \item С помощью MapReduce по результату предыдущего решить поставленную
+      задачу:
+      \begin{lstlisting}
+fun mapper(doc: [(String, Int)]: [(Int, String)]):
+    for word, count in doc:
+        yield count // 1000, word
+
+fun reducer(words: [String]): Int:
+    return set(words).size()
+      \end{lstlisting}
+  \end{itemize}
+\end{example}
+
+\begin{proposition}
+  В общем случае, задачи распределенного вычисления можно решать, составив
+  ацикличный граф подзадач MapReduce. Порядок вызовов определеяется
+  топологической сортировкой. Независимые друг от друга задачи можно решать
+  параллельно.
+\end{proposition}
+
+\textbf{Оптимизация: Combiner.}
+\begin{itemize}
+  \item Результатом \texttt{map} может быть большое число пар, что может быть
+    избыточным.
+  \item Перед передачей корзин узлу-редьюсеру, узел-маппер может выполнить
+    свертку по данным своего узла локально, чтобы сократить объем передаваемой
+    информации. Данная операция называется \textit{Combiner}.
+\end{itemize}
+
+\begin{remark} Combiner может не совпадать с Reducer.
+\end{remark}
+
+\begin{example}(Подсчет среднего значения по каждому ключу)
+  \begin{lstlisting}
+fun mapper(doc: [(String, Float)]): [(String, Float)]:
+    for group, value in doc:
+        yield group, value
+
+fun combiner(values: [Float]): (Float, Int):
+    return (sum(values), len(values))
+
+fun reducer(values: [(Float, Int)]): Float:
+    return sum(values[0]) / sum(values[1])
+  \end{lstlisting}
+\end{example}
