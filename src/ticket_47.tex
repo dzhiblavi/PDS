@@ -2,7 +2,8 @@
 
 \begin{definition}
     \textit{Модель MapReduce}. Универсальная модель для распределенных
-    вычислений. Решает задачи, которые можно представить через следующие операции:
+    вычислений. Решает задачи, которые можно представить через следующие
+    операции:
     \begin{itemize}
       \item \texttt{map :: Document -> [(Key, Value)]}, обработка каждого
         документа независимо.
@@ -13,8 +14,7 @@
     \end{itemize}
 \end{definition}
 
-\begin{algorithm}
-  Последовательная реализация.
+\begin{algorithm}(Последовательная реализация)
   \begin{lstlisting}
 fun mapReduce(docs: [Document],
               mapper: Document -> [(Key, Value)],
@@ -29,8 +29,7 @@ fun mapReduce(docs: [Document],
   \end{lstlisting}
 \end{algorithm}
 
-\begin{example}
-  Распределенный подсчет встречаемости слов.
+\begin{example}(Распределенный подсчет встречаемости слов)
   \begin{itemize}
     \item Каждый документ разбивается на слова.
     \item \texttt{map} для каждого слова возвращает пару из этого слова и $1$.
@@ -38,8 +37,7 @@ fun mapReduce(docs: [Document],
   \end{itemize}
 \end{example}
 
-\begin{example}
-  Распределенный подсчет обратного индекса слов по документам.
+\begin{example}(Распределенный подсчет обратного индекса слов по документам)
   \begin{itemize}
     \item Каждый документ разбивается на слова.
     \item \texttt{map} для каждого слова возвращает пару из этого слова и
