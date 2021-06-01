@@ -24,7 +24,7 @@
   \begin{lstlisting}
 fun mapReduce(docs: [Document],
               mapper: Document -> [(Key, Value)],
-              reducer: [Value] -> Result): {Key: Result}
+              reducer: [Value] -> Result) -> {Key: Result}:
     kvs = {}
     for doc in docs:
         for key, value in mapper(doc):

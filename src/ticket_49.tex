@@ -16,7 +16,7 @@
     \item С помощью MapReduce по результату предыдущего решить поставленную
       задачу:
       \begin{lstlisting}
-fun mapper(doc: [(String, Int)]: [(Int, String)]):
+fun mapper(doc: [(String, Int)] -> [(Int, String)]):
     for word, count in doc:
         yield count // 1000, word
 
@@ -47,14 +47,14 @@ fun reducer(words: [String]): Int:
 
 \begin{example}(Подсчет среднего значения по каждому ключу)
   \begin{lstlisting}
-fun mapper(doc: [(String, Float)]): [(String, Float)]:
+fun mapper(doc: [(String, Float)]) -> [(String, Float)]:
     for group, value in doc:
         yield group, value
 
-fun combiner(values: [Float]): (Float, Int):
+fun combiner(values: [Float]) -> (Float, Int):
     return (sum(values), len(values))
 
-fun reducer(values: [(Float, Int)]): Float:
+fun reducer(values: [(Float, Int)]) -> Float:
     return sum(values[0]) / sum(values[1])
   \end{lstlisting}
 \end{example}
