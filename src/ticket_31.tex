@@ -3,7 +3,7 @@
 \textit{Первую часть вопроса см. в предыдущем билете.}
 
 \begin{algorithm}(JumpHash)
-    
+
     Пусть в системе $N$ узлов.
     \begin{itemize}
         \item Обозначим за
@@ -30,8 +30,8 @@
         \item База индукции. Очевидно, что $P(\xi_1 = 0) = 1$.
         \item Переход. Если $i = N$:
             \[
-                P(\xi_{N + 1} = N) = \sum_{i = 0}^{N - 1}{P(\xi_N = i) \cdot 
-                \frac{1}{N + 1}} = \sum_{i = 0}^{N - 1}{\frac{1}{N} \cdot 
+                P(\xi_{N + 1} = N) = \sum_{i = 0}^{N - 1}{P(\xi_N = i) \cdot
+                \frac{1}{N + 1}} = \sum_{i = 0}^{N - 1}{\frac{1}{N} \cdot
                 \frac{1}{N + 1}} = \frac{1}{N + 1}
             .\]
             Если $i \neq N$:
@@ -64,7 +64,7 @@
 \end{algorithm}
 
 \begin{algorithm}(Хорошая реализация)
-    
+
     Заметим, что ``прыжки'' происходят редко, то есть достаточно часто
     \[
         ch(k, j + 1) = ch(k, j)
@@ -111,14 +111,14 @@
 \end{proof}
 
 \begin{algorithm}(Хороший алгоритм, продолжение)
-    
+
     Пусть в точке $i \geqslant b + 1$ еще не произошел прыжок. Тогда понятно,
     что $j \geqslant i$:
     \[
         P(j \geqslant i) = P(ch(k, i) = ch(k, b + 1)) = \frac{b + 1}{i}
     .\]
     Воспользуемся этим равенством, чтобы сделать более эффективный алгоритм.
-    Сгенерируем случайное число $r ~ U(0, 1)$. Тогда
+    Сгенерируем случайное число $r \sim U(0, 1)$. Тогда
     \[
         j \geqslant i \Llra r \leqslant \frac{b + 1}{i}
     ,\]
@@ -128,7 +128,7 @@
     .\]
     Выберем самую точную нижнюю границу на $j$:
     \[
-        j = \max_{i \leqslant \frac{b + 1}{r}}{i} = \left\lfloor \frac{b + 1}{r} 
+        j = \max_{i \leqslant \frac{b + 1}{r}}{i} = \left\lfloor \frac{b + 1}{r}
             \right\rfloor
     .\]
     Это и будет очередная точка прыжка. Напишем код, который симулирует жизнь
@@ -143,6 +143,7 @@
                 r = random.uniform(0, 1)
                 j = floor((b + 1) / r)
             }
+            return b
         }
     \end{lstlisting}
 \end{algorithm}
