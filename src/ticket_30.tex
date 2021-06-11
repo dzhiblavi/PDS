@@ -8,13 +8,13 @@
     Зафиксируем число $K$. На основе ``хорошей'' хеш-функции построим
     следующее отображение:
     \[
-        \texttt{nodeid} \leftarrow \argmax_{i = 0}^{K - 1}(h(k~\mid~i))
+        \texttt{node\_id} \leftarrow \argmax_{i = 0}^{K - 1}(h(key~\mid~i))
     .\]
     \begin{itemize}
         \item При добавлении узла каждый узел перемещает только те ключи,
             которые должны перейти на новый узел:
             \[
-                h(k~\mid~\texttt{new\_nodeid}) > h(k~\mid~\texttt{cur\_nodeid})
+                h(key~\mid~\texttt{new\_node\_id}) > h(key~\mid~\texttt{cur\_node\_id})
             .\]
         \item При удалении узла перемещаются только ключи с этого узла.
         \item Поиск узла по ключу осуществляется за $\cO(K)$.
