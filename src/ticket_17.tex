@@ -1,12 +1,11 @@
 \section{Упорядочение сообщений. Определения, иерархия порядков. Алгоритм для причинно-согласованного порядка.}
 
 \begin{definition}
-    Порядок называется \textit{причинно-согласованным}, если
+    Говорят, что соблюдается \textit{причинно-согласованный порядок}, если
     \[
         \not \exists m,n \in \bM \colon~ \texttt{snd(m)} \rightarrow \texttt{snd(n)}
         \wedge \texttt{rcv(n)} \rightarrow \texttt{rcv(m)}
     .\]
-    То есть не бывает пар сообщений, упорядоченных неправильно.
 \end{definition}
 
 \begin{remark}

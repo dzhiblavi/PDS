@@ -1,0 +1,9 @@
+src/*.aux
+src/*.fdb_latexmk
+src/*.fls
+src/*.log
+src/*.out
+src/*.synctex.gz
+src/*.toc
+.undodir/
+**/*.swp
