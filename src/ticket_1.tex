@@ -16,9 +16,10 @@
 
 \begin{definition}
     Отношение \textit{Произошло-до ($\rightarrow$)} -- минимальный
-    строгий частичный порядок на $\bE \times \bE$ такой, что
+    \textit{строгий частичный порядок} (транзитивное, антирефлексивное,
+    антисимметричное отношение) на $\bE \times \bE$ такой, что
     \begin{itemize}
-        \item $e \rightarrow f$, если $e, f$ в одном процессе и $e$ идет перед $f$.
+        \item Если $e, f$ в одном процессе и $e$ идет перед $f$, то $e \rightarrow f$.
         \item Если $m$ -- сообщение, то $\texttt{snd(m)} \rightarrow \texttt{rcv(m)}$.
     \end{itemize}
 \end{definition}
