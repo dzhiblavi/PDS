@@ -7,7 +7,7 @@
     \begin{itemize}
       \item \texttt{map :: Document -> [(Key, Value)]}, обработка каждого
         документа независимо.
-      \item \texttt{group :: [[(Key, Value)]] -> [(Key, Value)]},
+      \item \texttt{group :: [[(Key, Value)]] -> [(Key, [Value])]},
         результаты \texttt{map} объединяются по ключу.
       \item \texttt{reduce :: [Value] -> Result}, свертка сгруппированных
         значений.
