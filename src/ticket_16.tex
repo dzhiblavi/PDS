@@ -9,7 +9,7 @@
         \item Синхронный порядок.
     \end{itemize}
 
-    Для \textit{multicast} и \textit{broadcast} сообщений:
+    Для массовой рассылки сообщений:
     \begin{itemize}
         \item Общий порядок (total order).
     \end{itemize}
@@ -58,6 +58,11 @@
         \texttt{rcv}_q(n) < \texttt{rcv}_q(m)
     .\]
 \end{definition}
+
+\begin{remark}
+    Для случая, когда сообщения отправляются только одному процессу, это
+    \textit{общий порядок} всегда выполняется.
+\end{remark}
 
 \begin{algorithm}(FIFO)
 
