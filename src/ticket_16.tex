@@ -1,5 +1,20 @@
 \section{Упорядочение сообщений. Определения, иерархия порядков. Алгоритм для FIFO.}
 
+\begin{definition} Иерархия порядков сообщений
+    Для обычных сообщений между парой процессов:
+    \begin{itemize}
+        \item Асинхронная передача (нет порядка).
+        \item FIFO.
+        \item Причинно-согласованный порядок.
+        \item Синхронный порядок.
+    \end{itemize}
+
+    Для массовой рассылки сообщений:
+    \begin{itemize}
+        \item Общий порядок (total order).
+    \end{itemize}
+\end{definition}
+
 \begin{definition}
     Говорят, что соблюдается порядок \textit{FIFO (First In First Out)}, если
     \[
@@ -10,6 +25,43 @@
 
 \begin{remark}
     Под $<$ подразумевается отношение порядка в одном процессе.
+\end{remark}
+
+\begin{definition}
+    Говорят, что соблюдается \textit{причинно-согласованный порядок}, если
+    \[
+        \not \exists m,n \in \bM \colon~ \texttt{snd(m)} \rightarrow \texttt{snd(n)}
+        \wedge \texttt{rcv(n)} \rightarrow \texttt{rcv(m)}
+    .\]
+\end{definition}
+
+\begin{remark}
+    Под $\to$ подразумевается отношение ``произошло до``.
+\end{remark}
+
+\begin{definition}
+    Порядок называется \textit{синхронным}, если всем сообщениям можно сопоставить время $T(m)$ так, что $T(\texttt{snd}(m)) = T(\texttt{rcv}(m)) = T(m)$ и
+    \[
+        \forall e,f \in \bE \colon~ e \rightarrow f
+        \Lra T(e) < T(f)
+    .\]
+\end{definition}
+
+\begin{definition}
+    Пусть в системе сообщения рассылаются нескольким получателям.
+    Обозначим $\texttt{rcv}_p(m)$ -- события получения сообщения процессами
+    $p \in \bP$. Будем говорить, что соблюдается \textit{общий порядок},
+    если
+    \[
+        \not\exists m,n \in \bM,~ p,q \in \bP\colon~
+        \texttt{rcv}_p(m) < \texttt{rcv}_p(n) \wedge
+        \texttt{rcv}_q(n) < \texttt{rcv}_q(m)
+    .\]
+\end{definition}
+
+\begin{remark}
+    Для случая, когда сообщения отправляются только одному процессу, это
+    \textit{общий порядок} всегда выполняется.
 \end{remark}
 
 \begin{algorithm}(FIFO)
