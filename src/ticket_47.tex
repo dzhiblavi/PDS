@@ -7,8 +7,6 @@
     \begin{itemize}
       \item \texttt{map :: Document -> [(Key, Value)]}, обработка каждого
         документа независимо.
-      \item \texttt{group :: [[(Key, Value)]] -> [(Key, [Value])]},
-        результаты \texttt{map} объединяются по ключу.
       \item \texttt{reduce :: [Value] -> Result}, свертка сгруппированных
         значений.
     \end{itemize}
@@ -35,7 +33,7 @@ fun mapReduce(docs: [Document],
   \end{lstlisting}
 \end{algorithm}
 
-\begin{example}(Распределенный подсчет встречаемости слов)
+\begin{example}(Подсчёт встречаемости слов)
   \begin{itemize}
     \item Каждый документ разбивается на слова.
     \item \texttt{map} для каждого слова возвращает пару из этого слова и $1$.
@@ -43,7 +41,7 @@ fun mapReduce(docs: [Document],
   \end{itemize}
 \end{example}
 
-\begin{example}(Распределенный подсчет обратного индекса слов по документам)
+\begin{example}(Построение обратного индекса документов)
   \begin{itemize}
     \item Каждый документ разбивается на слова.
     \item \texttt{map} для каждого слова возвращает пару из этого слова и
