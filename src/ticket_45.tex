@@ -9,20 +9,16 @@
           $c$ happens-before $b$, $a \parallel b$, $a \parallel c$. \\
           Приоритет по убыванию: $c$, $b$, $a$. \\
           \begin{itemize}
-          \item При конфликте берем покомпонентый максимум векторных версий:
-            \begin{itemize}
-              \item $a + c = c, a + c \parallel b$
-              \item $(a + c) + b = a + c = c$
-              \item $a + b = a, c \rightarrow (a + b)$
-              \item $(a + b) + c = a + b = a$
-            \end{itemize}
-          \item При конфликте берем версию победителя:
-          \begin{itemize}
-            \item $a + c = c, (a + c) \rightarrow b$
-            \item $(a + c) + b = b$
-            \item $a + b = a, (a + b) \parallel c$
-            \item $(a + b) + c = c$
-          \end{itemize}
+          \item При конфликте берем покомпонентый максимум векторных версий:\\
+            $a + c = c, a + c \parallel b$\\
+            $(a + c) + b = a + c = c$\\
+            $a + b = a, c \rightarrow (a + b)$\\
+            $(a + b) + c = a + b = a$\\
+          \item При конфликте берем версию победителя:\\
+            $a + c = c, (a + c) \rightarrow b$\\
+            $(a + c) + b = b$\\
+            $a + b = a, (a + b) \parallel c$\\
+            $(a + b) + c = c$
          \item Поэтому держать только актуальное значение на реплике, и заменять при необходимости на нужное не получится.
         \end{itemize}
       \end{definition}
