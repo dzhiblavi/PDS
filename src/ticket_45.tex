@@ -32,12 +32,12 @@
       Серьезная проблема --- понимать, когда и какую из старых операций можно забыть.
     \end{remark}
     \begin{example}
-      \begin{figure}[h]
-          \centering
-          \includegraphics[scale = 0.5]{../assets/14.png}
-          \caption{Пример для РСУБД}
-      \end{figure}
       Даже если в операции не упоминается явно ключ --- не значит, что можно забыть.\\
+        \begin{figure}[h]
+            \centering
+            \includegraphics[scale = 0.5]{../assets/14.png}
+            \caption{Пример для РСУБД}
+        \end{figure}
     \end{example}
     \begin{example}
       Инкрементор:\\
@@ -45,17 +45,17 @@
           \item Состояние --- единственное число.
           \item Система выполняет запросы вида ``увеличить число на k``.
           \item Если не храним предка пришедшей записи, то мы не можем сказать, на сколько увеличил третий узел.
-          \item \begin{figure}[h]
-                        \centering
-                        \includegraphics[scale = 0.5]{../assets/15.png}
-                        \caption{Параллельная запись}
-                \end{figure}
-          \item \begin{figure}[h]
-                        \centering
-                        \includegraphics[scale = 0.5]{../assets/16.png}
-                        \caption{Последовательная запись}
-                \end{figure}
           \item Храним старое состояние, пока имеется возможность получить его непосредственного потомка.
           \item Выкидываем старое, когда по каждой компоненте вектора $V$ получили ``следующее`` состояние.
       \end{itemize}
+      \begin{figure}[h]
+                    \centering
+                    \includegraphics[scale = 0.5]{../assets/15.png}
+                    \caption{Параллельная запись}
+    \end{figure}
+            \begin{figure}[h]
+                          \centering
+                          \includegraphics[scale = 0.5]{../assets/16.png}
+                          \caption{Последовательная запись}
+            \end{figure}
     \end{example}
