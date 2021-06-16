@@ -7,7 +7,7 @@
       \begin{definition}
         Метод \textit{Last Write Wins} не работает при выборе любой из параллельных записей.\\
           $c$ happens-before $b$, $a \parallel b$, $a \parallel c$. \\
-          Приоритет по убыванию: $c$, $b$, $a$. \\
+          Приоритет по убыванию: $c$, $a$, $b$. \\
           \begin{itemize}
           \item При конфликте берем покомпонентый максимум векторных версий:\\
             $a + c = c, a + c \parallel b$\\
